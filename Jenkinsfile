@@ -72,7 +72,7 @@ node {
             //sh """${props['registry']}/${props['appname']}:${buildNumber} > imageNam.txt"""
 	    imageName="""${props['registry']}/${props['appname']}:${buildNumber}"""
 	    sh """buildNum=${buildNumber} >> hash_code.sh"""
-		sh """export buildNum=${buildNumber}
+		sh """export buildNum=${buildNumber}"""
 	    sh "source ./hash_code.sh"
             sh """docker build -t '${imageName}' ."""
         } catch (err) {

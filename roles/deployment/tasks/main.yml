@@ -61,4 +61,4 @@
 - name: Check if Application is fine
   fail:
     msg: 'service is not happy'
-  when: "'AWESOME' not in webpage.content"
+  when: "'Spring Music' not in webpage.content"

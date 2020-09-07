@@ -22,7 +22,7 @@
     seconds: 40
 
 - name: Create a Application by reading the definition from a file
-  command: " envsubst < application.yml \ | kubectl apply -f -"
+  command: "envsubst ${buildNum} < application.yml \ | kubectl apply -f -"
 #  k8s:
 #    state: present
 #    src: application.yml

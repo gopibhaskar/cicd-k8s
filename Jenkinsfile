@@ -69,10 +69,10 @@ node {
     }
     stage("Deploy a war to Docker image and Push"){
         try {
-            sh """${props['registry']}/${props['appname']}:${buildNumber} > imageNam.txt""" 
-			imageName=readFile('imageNam.txt').trim()
-			sh """finalImage=${imageName}>>hash_code.sh"""
-			sh "source ./hash_code.sh"
+            //sh """${props['registry']}/${props['appname']}:${buildNumber} > imageNam.txt"""
+	    imageName="""${props['registry']}/${props['appname']}:${buildNumber}"""
+	    sh """buildNum=${buildNumber} >> hash_code.sh"""
+	    sh "source ./hash_code.sh"
             sh """docker build -t '${imageName}' ."""
         } catch (err) {
             currentBuild.result='FAILURE'

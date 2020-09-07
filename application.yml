@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: gopi-app
-        image: ${registry}/${appname}:${buildNum}
+        image: gopi4s/cicd:${buildNum}
         resources:
           # need more cpu upon initialization, therefore burstable class
           limits:

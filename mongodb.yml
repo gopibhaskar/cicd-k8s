@@ -34,6 +34,10 @@ spec:
             value: admin
           - name: MONGO_INITDB_ROOT_PASSWORD
             value: password
+        ports:
+        - containerPort: 27017
+          name: ui
+          protocol: TCP        
       nodeSelector:
         kubernetes.io/hostname: mongodb-node
 ---

@@ -10,7 +10,7 @@
   shell: "envsubst '${CONFIG_HASH}' < logstash.yml \ | kubectl apply -f -"
 
 - name: Create Filebeats for ELK if filebeats file exists
-  command: "kubectl apply -f filebeats.yml"
+  command: "kubectl apply -f filebeat.yml"
 
 - name: Create Metricbeats for ELK if metricbeats file exists
   command: "kubectl apply -f filebeats.yml"

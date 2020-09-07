@@ -1,0 +1,12 @@
+---
+- hosts: "localhost"
+  pre_tasks:
+    - name : include vars for deployment
+      tags: always
+      include_vars:
+        dir: "vars"
+        files_matching: "*.yml"
+        extensions:
+        - yml
+  roles:
+    - deployment

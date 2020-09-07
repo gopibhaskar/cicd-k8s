@@ -1,0 +1,84 @@
+---
+- name: Generate Hash code for configmap file
+  command: "export CONFIG_HASH = (find logstash-configmap.yml -type f|sort | xargs md5sum | md5sum | cut -d' ' -f 1)"
+  
+- name: Create ElasticSearch if mandatory elastic file exists
+  command: "kubectl apply -f elasticsearch.yml"
+  when: elasticsearch.yml.stat.exists == True
+  
+ 
+//- name: Check port numbers is accessible from current host
+//  wait_for:
+//    host: localhost
+//    port: "9200"
+//    state: started        
+//    delay: 0              
+//    timeout: 20 
+
+- name: Apply Configmap for logstash if  logstash-config file exists
+  command: "kubectl apply -f logstash-config.yml"
+  when: logstash-config.yml.stat.exists == True
+
+- name: Create deployment  for logstash if  logstash-deployment file exists
+  command: " envsubst '${CONFIG_HASH}' < logstash.yml \ | kubectl apply -f -"
+  when: logstash-deployment.yml.stat.exists == True
+ 
+- name: Create Filebeats for ELK if filebeats file exists
+  command: "kubectl apply -f filebeats.yaml"
+  when: filebeats.yml.stat.exists == True
+
+- name: Create Metricbeats for ELK if metricbeats file exists
+  command: "kubectl apply -f filebeats.yaml"
+  when: metricbeats.yml.stat.exists == True
+ 
+- name: Create Kibana for ELK if file exists
+  command: "kubectl apply -f kibana.yml"
+  when: kibana.yml.stat.exists == True 
+
+- name: Create a Application by reading the definition from a file
+  k8s:
+    state: present
+    src: application.yml
+
+- name: Create a Mongo DB by reading the definition from a file
+  k8s:
+    state: present
+    src: mongodb.yml
+    
+# Due to RAM issues in Minikube deploying one more app in separate
+- name: "Copy docker image from local docker machine image"
+  shell: |
+    docker login -u gopi4s -p {{ personal_token }}
+    docker push {{ registry }}/{{ appname }}:{{ versionNum }}
+    
+- name: Create and start services
+  docker_compose:
+    project_src: docker_compose.yml
+  register: output
+  ignore_errors: true
+  
+- name: Run docker compose manually using script
+  command: docker-compose -f docker-compose.yml -p music up -d
+  when: output is failed
+  
+- name: Register Application Status
+  action: uri url=http://34.123.6.156:8383/spring-music/ return_content=yes
+  register: webpage
+
+- name: Check App
+    uri:
+      url: "http://34.123.6.156:8383/spring-music/"
+      method: GET
+      validate_certs: no
+    register: app_result
+    until: app_result.status == 200
+    retries: 5
+    delay: 10
+    environment:
+      no_proxy: 127.0.0.1, localhost
+    ignore_errors: true
+ 
+- name: Check if Application is fine
+  fail:
+    msg: 'service is not happy'
+  when: "'AWESOME' not in webpage.content"

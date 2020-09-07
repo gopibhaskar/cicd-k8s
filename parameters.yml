@@ -1,0 +1,5 @@
+personal_token: 1d09bbdb-6758-4ce5-8e02-cb4f6572f32e
+registry: gopi4s
+appname: cicd
+docker.registry: gopi4s
+environment.URL: environment_host_url

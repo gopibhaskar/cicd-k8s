@@ -23,8 +23,7 @@ node {
     }
     stage("Build and Compile Stage"){
         try {
-	    sh "chmod +x gradlew"
-	    sh "source ./hash_code.sh"
+		    sh "chmod +x gradlew"
             sh "./gradlew clean compileTestJava"
         } catch (err) {
             currentBuild.result='FAILURE'
@@ -70,7 +69,10 @@ node {
     }
     stage("Deploy a war to Docker image and Push"){
         try {
-            imageName="""${props['registry']}/${props['appname']}:${buildNumber}"""
+            sh """${props['registry']}/${props['appname']}:${buildNumber} > imageNam.txt""" 
+			imageName=readFile('imageNam.txt').trim()
+			sh """finalImage=${imageName}>>hash_code.sh"""
+			sh "source ./hash_code.sh"
             sh """docker build -t '${imageName}' ."""
         } catch (err) {
             currentBuild.result='FAILURE'
@@ -113,7 +115,7 @@ def notifyBuild(String buildStatus, String buildFailedAt, String bodyDetails, St
 	\n"""
 	emailext attachLog: true,
 	recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']],
-	body: details, 
+	body: details,
 	subject: """${buildStatus}: Job ${JOB_NAME} [${BUILD_NUMBER}] ${buildFailedAt}""", 
 	to: """${commit_Email}"""
 }

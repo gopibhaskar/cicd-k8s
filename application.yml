@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: gopi-app
-        image: {{ registry }}/{{ appname }}:{{ versionNum }}
+        image: ${finalImage}
         resources:
           # need more cpu upon initialization, therefore burstable class
           limits:

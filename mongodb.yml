@@ -2,6 +2,12 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongodb
+  namespace: kube-system
+  labels:
+    k8s-app: mongodb
+    version: v6.2.4
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
 spec:
   serviceName: mongodb
   replicas: 1
@@ -22,7 +28,7 @@ spec:
           limits:
             cpu: 1000m
           requests:
-            cpu: 100m        
+            cpu: 100m
         env:
           - name: MONGO_INITDB_ROOT_USERNAME
             value: admin
@@ -35,6 +41,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mongodb
+  namespace: kube-system
   labels:
     app: mongodb
 spec:

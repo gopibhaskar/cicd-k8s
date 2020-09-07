@@ -11,7 +11,7 @@ node {
     stage('Checkout Code') {
         props = readProperties  file: """deploy.properties"""
         checkout scm
-
+	sh 'export buildNum=${buildNumber}'
         sh 'git log --format="%ae" | head -1 > commit-author.txt'
         commit_Email = readFile('commit-author.txt').trim()
         sh 'git show -s --pretty=%an > committer.txt'
@@ -72,6 +72,7 @@ node {
             //sh """${props['registry']}/${props['appname']}:${buildNumber} > imageNam.txt"""
 	    imageName="""${props['registry']}/${props['appname']}:${buildNumber}"""
 	    sh """buildNum=${buildNumber} >> hash_code.sh"""
+		sh """export buildNum=${buildNumber}
 	    sh "source ./hash_code.sh"
             sh """docker build -t '${imageName}' ."""
         } catch (err) {

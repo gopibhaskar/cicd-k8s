@@ -17,6 +17,7 @@ node {
         sh 'git show -s --pretty=%an > committer.txt'
         commit_username = readFile('committer.txt').trim()
         buildNumber = """${BUILD_NUMBER}"""
+	sh 'export buildNum=${BUILD_NUMBER}'
         echo buildNumber
         echo commit_username
         echo commit_Email

@@ -100,14 +100,14 @@ node {
 
             } finally {
                 publishHTML(target: [
-                        reportDir  : 'target/site/serenity',
+                        reportDir  : 'build/reports/tests/test/',
                         reportFiles: 'index.html',
                         reportName : "test-result.xml"
                 ])
             }
         }
         stage('Results') {
-            junit '**/target/failsafe-reports/*.xml'
+            junit '**/build/reports/tests*.xml'
         }
     }
 def notifyBuild(String buildStatus, String buildFailedAt, String bodyDetails, String commit_Email) 

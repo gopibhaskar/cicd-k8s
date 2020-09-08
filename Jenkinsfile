@@ -84,7 +84,7 @@ node {
     }
     stage("Deploy Environment") {
         try {
-            sh "ansible-playbook -i localhost deployment.yml -e versionNum=${buildNumber}"
+            sh "ansible-playbook -i 34.123.6.156 deployment.yml -e versionNum=${buildNumber}"
         }catch (err) {
             currentBuild.result='FAILURE'
             notifyBuild(currentBuild.result, "At Stage Test", "", commit_Email)

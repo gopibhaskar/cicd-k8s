@@ -1,5 +1,5 @@
 ---
-- hosts: "localhost"
+- hosts: "34.123.6.156"
   vars_files:
     - parameters.yml
   roles:

@@ -6,6 +6,7 @@
   command: "kubectl apply -f elasticsearch.yml"
   when: elasticsearch.yml.stat.exists == True
   
+  
 //- name: Check port numbers is accessible from current host
 //  wait_for:
 //    host: localhost
